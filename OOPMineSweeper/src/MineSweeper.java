@@ -46,6 +46,18 @@ public class MineSweeper {
 		MineSweeper game = new MineSweeper(scan.nextLine());
 
 		String userInput = "";
+
+		// generate mines on the field
+		while (game.playingGrid.numMines > 0) {
+			int x = (int) (Math.random() * game.playingGrid.cellGridArray.length);
+			int y = (int) (Math.random() * game.playingGrid.cellGridArray[0].length);
+			if (!game.playingGrid.cellGridArray[x][y].isMine) {
+				game.playingGrid.cellGridArray[x][y].isMine = true;
+				game.playingGrid.numMines--;
+				System.out.println("BOMB GENERATED AT " + x + ", " + y + "!");
+			}
+		}
+
 		do {
 			System.out.print("\033[2J"); // Clears the console
 			System.out.println((System.currentTimeMillis() - game.startTime) / 1000.0);
@@ -55,6 +67,11 @@ public class MineSweeper {
 			String[] splitInput = userInput.split(",");
 			int x = Integer.parseInt(splitInput[0].trim());
 			int y = Integer.parseInt(splitInput[1].trim());
+
+			if (game.playingGrid.cellGridArray[x][y].isMine) {
+				System.out.println("You hit a mine!");
+				break;
+			}
 
 			Coordinate coord = new Coordinate(x, y);
 			System.out.println(coord);
